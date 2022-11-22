@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getUserById } from "./controller/user_query";
+import { getUserById } from "./user_query";
 function App() {
   const [user, setUsers] = useState(false);
   useEffect(() => {
