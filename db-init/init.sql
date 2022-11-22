@@ -1,12 +1,14 @@
+
+
 create table quatro_user(
     user_id serial primary key,
     email varchar not null,
     password varchar not null,
     first_name varchar(30), 
     last_name varchar(30),
-    date_of_birth date,
+    date_of_birth varchar(30),
     gender varchar,
-    phone_number int,
+    phone_number varchar(30),
     user_credit float
 );
 
@@ -16,7 +18,8 @@ create table quatro_product(
     product_description varchar not null, 
     product_category varchar not null, 
     product_price float not null, 
-    product_quantity int not null
+    product_quantity int not null,
+    product_image varchar
 );
 
 create table quatro_transaction(
@@ -36,7 +39,7 @@ create table quatro_address(
      address_line_1 varchar(50) not null, 
      address_line_2 varchar(50) not null, 
      address_line_3 varchar(50) not null, 
-     postcode int not null, 
+     postcode varchar not null, 
      state text not null 
 );
 -- SQL

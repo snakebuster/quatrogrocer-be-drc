@@ -5,16 +5,17 @@ services:
     networks:
       - backend
     environment:
-      - POSTGRES_PORT=5432
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=my_db
+      - POSTGRES_PORT=${PGPORT}
+      - POSTGRES_USER=${PGUSERNAME}
+      - POSTGRES_PASSWORD=${PGPASSWORD}
+      - POSTGRES_DB=${DATABASE_URL}
+      - SECRET = ${SECRET}
     depends_on:
       - postgres
     volumes:
       - .:/usr/src/app
     ports:
-      - 3000:3000
+      - 5004:5004
     container_name: quatrogrocernodejs
     # tty: true
     command: ["npm", "run", "dev"]
@@ -24,10 +25,10 @@ services:
     ports:
       - 5434:5432
     environment:
-      - POSTGRES_PORT=5432
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=my_db
+      - POSTGRES_PORT=${PGPORT}
+      - POSTGRES_USER=${PGUSERNAME}
+      - POSTGRES_PASSWORD=${PGPASSWORD}
+      - POSTGRES_DB=${DATABASE_URL}
     networks:
       - backend
     volumes:
