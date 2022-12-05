@@ -1,4 +1,5 @@
 require("dotenv").config();
+const validator = require("validator");
 
 const Pool = require("pg").Pool;
 const pool = new Pool({
@@ -70,7 +71,6 @@ const createAddress = async function (
   let existAddress = resultExistQuery.rows;
 
   var regAddress = /^[a-zA-Z0-9.-\s]/;
-  var regPostcode = /^\d{5}$/;
   const states = [
     "WP Kuala Lumpur",
     "Kuala Lumpur",
@@ -97,47 +97,39 @@ const createAddress = async function (
   });
 
   if (
-    !address_line_1.trim() ||
-    !address_line_2.trim() ||
-    !postcode.trim() ||
-    !state.trim()
+    validator.isEmpty(address_line_1) ||
+    validator.isEmpty(address_line_2) ||
+    validator.isEmpty(address_line_3) ||
+    validator.isEmpty(postcode) ||
+    validator.isEmpty(state)
   ) {
     throw Error(
       "At least require input for address line 1 , address line 2,  postcode and state"
     );
   }
 
-  if (address_line_1) {
-    if (!regAddress.test(address_line_1)) {
-      throw Error("*Address line 1 not in correct format");
+  if (address_line_1 || address_line_2 || address_line_3) {
+    if (
+      validator.isLength(address_line_1, address_line_2, address_line_3, {
+        max: 50,
+      })
+    ) {
+      throw Error("*Address line  max character is 50");
+    } else if (!regAddress.test(address_line_1)) {
+      throw Error("*Address line invalid format");
     }
   }
 
-  if (address_line_2) {
-    if (!regAddress.test(address_line_2)) {
-      throw Error("*Address line 2 not in correct format");
-    }
-  }
-
-  if (address_line_3) {
-    if (!regAddress.test(address_line_3)) {
-      throw Error("*Address line 3 not in correct format");
-    }
-  }
-
-  if (postcode) {
-    if (postcode.length != 5) {
-      throw Error("*Postcode accepts 5 digits only");
-    }
-    if (!regPostcode.test(postcode)) {
-      throw Error("*Postcode accepts digits only");
-    }
-  }
-
-  if (state) {
+  if (postcode || state) {
     state = state.toUpperCase();
+    if (!validator.isInt(postcode)) {
+      throw Error("Postcode only allow numbers");
+    } else if (postcode.length < 5 || postcode.length > 5) {
+      throw Error("Postcode format in Malaysia is 5 digits");
+    }
+
     if (!upperStates.includes(state)) {
-      throw Error("*State's input is invalid");
+      throw Error("State input is invalid");
     }
   }
 
@@ -196,6 +188,70 @@ const updateAddressDetails = async function (
   state,
   address_id
 ) {
+  //validation
+  var regAddress = /^[a-zA-Z0-9*,.():;'@&-\s]/;
+
+  const states = [
+    "WP Kuala Lumpur",
+    "Kuala Lumpur",
+    "Johor",
+    "Kedah",
+    "Kelantan",
+    "Melaka",
+    "Negeri Sembilan",
+    "Pahang",
+    "Penang",
+    "Perak",
+    "Perlis",
+    "Sabah",
+    "Sarawak",
+    "Selangor",
+    "Terengganu",
+    "WP Labuan",
+    "Labuan",
+    "WP Putrajaya",
+    "Putrajaya",
+  ];
+  const upperStates = states.map((e) => {
+    return e.toUpperCase();
+  });
+  if (
+    validator.isEmpty(address_line_1) ||
+    validator.isEmpty(address_line_2) ||
+    validator.isEmpty(address_line_3) ||
+    validator.isEmpty(postcode) ||
+    validator.isEmpty(state)
+  ) {
+    throw Error(
+      "At least require input for address line 1 , address line 2,  postcode and state"
+    );
+  }
+
+  if (address_line_1 || address_line_2 || address_line_3) {
+    if (
+      validator.isLength(address_line_1, address_line_2, address_line_3, {
+        max: 50,
+      })
+    ) {
+      throw Error("*Address line  max character is 50");
+    } else if (!regAddress.test(address_line_1)) {
+      throw Error("*Address line invalid format");
+    }
+  }
+
+  if (postcode || state) {
+    state = state.toUpperCase();
+    if (!validator.isInt(postcode)) {
+      throw Error("Postcode only allow numbers");
+    } else if (postcode.length < 5 || postcode.length > 5) {
+      throw Error("Postcode format in Malaysia is 5 digits");
+    }
+
+    if (!upperStates.includes(state)) {
+      throw Error("State input is invalid");
+    }
+  }
+
   let query_1 = {
     text: "select * from quatro_address where address_id=$1",
     values: [address_id],
@@ -212,7 +268,9 @@ const updateAddressDetails = async function (
     text: `update quatro_address set address_line_1 = coalesce(nullif($1,''), address_line_1),
            address_line_2 = coalesce(nullif($2,''), address_line_2),
            address_line_3 = coalesce(nullif($3,''), address_line_3),
-           postcode = coalesce(nullif($4,0), postcode),
+
+           postcode = coalesce(nullif($4,''), postcode),
+
            state = coalesce(nullif($5,''), state)
            where address_id = $6;`,
     values: [
