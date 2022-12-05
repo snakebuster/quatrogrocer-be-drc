@@ -211,7 +211,7 @@ const updateTransactionAPI = async (request, response) => {
   }
 };
 
-const updatePaymentStatus = async function (user_id, transaction_timestamp) {
+const updatePaymentStatus = async function (user_id) {
   let transaction_timestamp = new Date();
   let query_1 = {
     text: "select user_id from quatro_transaction where user_id=$1",
