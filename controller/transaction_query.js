@@ -22,7 +22,7 @@ const getTransaction = async function (user_id) {
   }
 
   let query = {
-    text: "select * from quatro_transaction where user_id=$1 and payment_status=true",
+    text: "select distinct * from quatro_transaction where user_id=$1 and payment_status=true",
     values: [user_id],
   };
 
@@ -61,7 +61,7 @@ const getCheckoutCart = async function (user_id) {
   }
 
   let query = {
-    text: "select * from quatro_transaction where user_id=$1 and payment_status=false",
+    text: "select distinct * from quatro_transaction where user_id=$1 and payment_status=false",
     values: [user_id],
   };
 
@@ -239,7 +239,7 @@ const updatePaymentStatus = async function (user_id) {
 };
 
 const updatePaymentAPI = async (request, response) => {
-  const { user_id, product_id } = request.body;
+  const { user_id } = request.body;
   try {
     let paymentUpdate = await updatePaymentStatus(user_id);
     response.status(200).json({
