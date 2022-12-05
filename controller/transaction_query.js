@@ -239,7 +239,7 @@ const updatePaymentStatus = async function (user_id) {
 };
 
 const updatePaymentAPI = async (request, response) => {
-  const { user_id, product_id } = request.body;
+  const { user_id } = request.body;
   try {
     let paymentUpdate = await updatePaymentStatus(user_id);
     response.status(200).json({

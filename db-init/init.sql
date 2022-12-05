@@ -60,7 +60,8 @@ create table quatro_cart(
 user_id int not null, 
 product_id int, 
 discount_product_id int,
-product_quantity int not null);
+product_quantity int not null,
+payment_status boolean);
 -- SQL
 
 
