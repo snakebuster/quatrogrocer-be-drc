@@ -15,14 +15,18 @@ const jwt = require("express-jwt");
 const jsonwebtoken = require("jsonwebtoken");
 require("dotenv").config();
 
-// app.use(cors());
+app.use(
+  cors({
+    origin: ["https://www.quatrogrocer.one", "http://localhost:3000"],
+  })
+);
 
 app.use(bodyParser.json());
-// app.use(
-//   bodyParser.urlencoded({
-//     extended: true,
-//   })
-// );
+app.use(
+  bodyParser.urlencoded({
+    extended: false,
+  })
+);
 
 app.get("/", (request, response) => {
   response.json({ info: "Node.js, Express, and Postgres API" });
