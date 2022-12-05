@@ -70,7 +70,6 @@ const createAddress = async function (
   let resultExistQuery = await pool.query(existQuery);
   let existAddress = resultExistQuery.rows;
 
-  var regAddress = /^[a-zA-Z0-9.-\s]/;
   const states = [
     "WP Kuala Lumpur",
     "Kuala Lumpur",
@@ -113,8 +112,6 @@ const createAddress = async function (
       })
     ) {
       throw Error("*Address line  max character is 50");
-    } else if (!regAddress.test(address_line_1)) {
-      throw Error("*Address line invalid format");
     }
   }
 
@@ -187,7 +184,6 @@ const updateAddressDetails = async function (
   address_id
 ) {
   //validation
-  var regAddress = /^[a-zA-Z0-9*,.():;'@&-\s]/;
 
   const states = [
     "WP Kuala Lumpur",
@@ -230,8 +226,6 @@ const updateAddressDetails = async function (
       })
     ) {
       throw Error("*Address line  max character is 50");
-    } else if (!regAddress.test(address_line_1)) {
-      throw Error("*Address line invalid format");
     }
   }
 
