@@ -214,8 +214,10 @@ const updateUser = async function (
   }
 
   if (!validPassword) {
-    throw Error("Invalid Password");
+    throw Error("Incorrect Password");
   }
+
+
 
   let query = {
     text: `update quatro_user set first_name = coalesce(nullif($1,''), first_name),
@@ -285,6 +287,10 @@ const updatePassword = async function (oldPassword, password, user_id) {
     throw Error("Old Password is incorrect");
   }
 
+  if (!validator.isStrongPassword(password)) {
+    throw Error("New Password not strong enough");
+  }
+
   let query = {
     text: `update quatro_user set password = coalesce(nullif($1,''), password) where user_id = $2`,
     values: [passHash, user_id],
@@ -304,7 +310,7 @@ const updatePasswordAPI = async (request, response) => {
 
     //const updateUserJwt = createToken(updateUserDB?.user_id);
 
-    response.status(200).json({ result: email, message: "User updated" });
+    response.status(200).json({ result: user_id, message: "User updated" });
   } catch (error) {
     console.log("error:", error);
     response.status(404).json({ error: error.message });

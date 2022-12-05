@@ -18,8 +18,8 @@ const getAllProduct = async function (product) {
   };
 
   let resultQuery = await pool.query(query);
-
   let GetProduct = resultQuery.rows;
+
   return GetProduct;
 };
 
