@@ -190,7 +190,7 @@ const updateTransaction = async function (user_id) {
               from quatro_product_discount 
               where quatro_transaction.discount_product_id = quatro_product_discount.discount_product_id)
               , 
-              payment_status = false, transaction_timestamp = $1 where user_id = $2;`,
+              transaction_timestamp = $1 where user_id = $2 ;`,
     values: [transaction_timestamp, user_id],
   };
 
@@ -228,8 +228,8 @@ const updatePaymentStatus = async function (user_id) {
   }
 
   let query = {
-    text: `update quatro_transaction set payment_status = true where user_id = $1 and product_id = $2`,
-    values: [user_id, product_id],
+    text: `update quatro_transaction set payment_status = true where user_id = $1`,
+    values: [user_id],
   };
 
   let resultQuery = await pool.query(query);
@@ -241,7 +241,7 @@ const updatePaymentStatus = async function (user_id) {
 const updatePaymentAPI = async (request, response) => {
   const { user_id, product_id } = request.body;
   try {
-    let paymentUpdate = await updatePaymentStatus(user_id, product_id);
+    let paymentUpdate = await updatePaymentStatus(user_id);
     response.status(200).json({
       result: paymentUpdate,
       message: "Payment status updated successfully",

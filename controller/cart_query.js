@@ -22,7 +22,7 @@ const createCart = async function (user_id, product_id, product_quantity) {
   }
 
   let query = {
-    text: "insert into quatro_cart(user_id, product_id, product_quantity) values($1,$2,$3) returning user_id",
+    text: "insert into quatro_cart(user_id, product_id, product_quantity, payment_status) values($1,$2,$3,false) returning user_id",
     values: [user_id, product_id, product_quantity],
   };
 
@@ -96,7 +96,7 @@ const pushCart = async function (user_id) {
   }
 
   let query = {
-    text: "insert into quatro_transaction(user_id, product_id, discount_product_id, product_quantity) select user_id, product_id, discount_product_id, product_quantity from quatro_cart where user_id = $1;",
+    text: "insert into quatro_transaction(user_id, product_id, discount_product_id, product_quantity,payment_status) select user_id, product_id, discount_product_id, product_quantity, payment_status from quatro_cart where user_id = $1;",
     values: [user_id],
   };
 
@@ -137,7 +137,7 @@ const createDiscountCart = async function (
   }
 
   let query = {
-    text: "insert into quatro_cart(user_id, discount_product_id, product_quantity) values($1,$2,$3) returning user_id",
+    text: "insert into quatro_cart(user_id, discount_product_id, product_quantity, payment_status) values($1,$2,$3,false) returning user_id",
     values: [user_id, discount_product_id, product_quantity],
   };
 
@@ -220,7 +220,7 @@ const pushDiscountCart = async function (user_id) {
   }
 
   let query = {
-    text: "insert into quatro_transaction(user_id, discount_product_id, product_quantity) select user_id, discount_product_id, product_quantity from quatro_cart where user_id = $1;",
+    text: "insert into quatro_transaction(user_id, discount_product_id, product_quantity, payment_status) select user_id, discount_product_id, product_quantity, payment_status from quatro_cart where user_id = $1;",
     values: [user_id],
   };
 
