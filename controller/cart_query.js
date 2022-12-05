@@ -22,7 +22,7 @@ const createCart = async function (user_id, product_id, product_quantity) {
   }
 
   let query = {
-    text: "insert into quatro_cart(user_id, product_id, product_quantity) values($1,$2,$3) returning user_id",
+    text: "insert into quatro_cart(user_id, product_id, product_quantity, payment_status) values($1,$2,$3,false) returning user_id",
     values: [user_id, product_id, product_quantity],
   };
 
@@ -45,7 +45,8 @@ const createCartAPI = async (request, response) => {
   }
 };
 
-const deleteCart = async function (user_id, product_id) {
+const deleteCart = async function (user_id) {
+  console.log(user_id);
   let query_1 = {
     text: "select user_id from quatro_cart where user_id=$1",
     values: [user_id],
@@ -59,8 +60,8 @@ const deleteCart = async function (user_id, product_id) {
   }
 
   let query = {
-    text: "delete from quatro_cart where product_id = $1 ",
-    values: [product_id],
+    text: "delete from quatro_cart where user_id = $1",
+    values: [user_id],
   };
 
   let resultQuery = await pool.query(query);
@@ -70,9 +71,9 @@ const deleteCart = async function (user_id, product_id) {
 };
 
 const deleteCartAPI = async (request, response) => {
-  const { user_id, product_id } = request.body;
+  console.log(request.body);
   try {
-    let cartDelete = await deleteCart(user_id, product_id);
+    let cartDelete = await deleteCart(request.body.user_id);
     response
       .status(200)
       .json({ result: cartDelete, message: "Successfully delete from cart" });
@@ -96,7 +97,7 @@ const pushCart = async function (user_id) {
   }
 
   let query = {
-    text: "insert into quatro_transaction(user_id, product_id, discount_product_id, product_quantity) select user_id, product_id, discount_product_id, product_quantity from quatro_cart where user_id = $1;",
+    text: "insert into quatro_transaction(user_id, product_id, discount_product_id, product_quantity,payment_status) select user_id, product_id, discount_product_id, product_quantity, payment_status from quatro_cart where user_id = $1;",
     values: [user_id],
   };
 
@@ -137,7 +138,7 @@ const createDiscountCart = async function (
   }
 
   let query = {
-    text: "insert into quatro_cart(user_id, discount_product_id, product_quantity) values($1,$2,$3) returning user_id",
+    text: "insert into quatro_cart(user_id, discount_product_id, product_quantity, payment_status) values($1,$2,$3,false) returning user_id",
     values: [user_id, discount_product_id, product_quantity],
   };
 
@@ -172,15 +173,14 @@ const deleteDiscountCart = async function (discount_product_id, user_id) {
 
   let resultQuery_1 = await pool.query(query_1);
   let user = resultQuery_1.rows;
-  console.log("test", user);
 
   if (user.length === 0) {
     throw Error("Cart doesn't exist");
   }
 
   let query = {
-    text: "delete from quatro_cart where discount_product_id = $1 ",
-    values: [discount_product_id],
+    text: "delete from quatro_cart where discount_product_id = $1 and user_id = $2",
+    values: [discount_product_id, user_id],
   };
 
   let resultQuery = await pool.query(query);
@@ -220,7 +220,7 @@ const pushDiscountCart = async function (user_id) {
   }
 
   let query = {
-    text: "insert into quatro_transaction(user_id, discount_product_id, product_quantity) select user_id, discount_product_id, product_quantity from quatro_cart where user_id = $1;",
+    text: "insert into quatro_transaction(user_id, discount_product_id, product_quantity, payment_status) select user_id, discount_product_id, product_quantity, payment_status from quatro_cart where user_id = $1;",
     values: [user_id],
   };
 

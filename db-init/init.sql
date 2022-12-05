@@ -33,11 +33,11 @@ create table quatro_product_discount(
 create table quatro_address(
     address_id serial primary key,
     user_id int constraint user_id_address references quatro_user(user_id) on delete cascade,
-     address_line_1 varchar(30) , 
-     address_line_2 varchar(30) , 
-     address_line_3 varchar(30) , 
-     postcode varchar , 
-     state text 
+     address_line_1 varchar(50) not null, 
+     address_line_2 varchar(50) not null, 
+     address_line_3 varchar(50) not null, 
+     postcode varchar not null, 
+     state text not null 
 );
 
 create table quatro_transaction(

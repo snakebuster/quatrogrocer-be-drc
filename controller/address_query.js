@@ -323,6 +323,7 @@ const deleteAddress = async function (address_id) {
   if (address1.length === 0) {
     throw Error("Address doesn't exist");
   }
+
   let query = {
     text: "delete from quatro_address where address_id = $1",
     values: [address_id],
