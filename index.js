@@ -17,7 +17,7 @@ require("dotenv").config();
 
 app.use(
   cors({
-    origin: "https://www.quatrogrocer.one",
+    origin: ("https://www.quatrogrocer.one", "https://quatrogrocer.one"),
     credentials: true,
   })
 );
