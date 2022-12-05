@@ -46,7 +46,6 @@ const createCartAPI = async (request, response) => {
 };
 
 const deleteCart = async function (user_id) {
-  console.log(user_id);
   let query_1 = {
     text: "select user_id from quatro_cart where user_id=$1",
     values: [user_id],
@@ -71,7 +70,6 @@ const deleteCart = async function (user_id) {
 };
 
 const deleteCartAPI = async (request, response) => {
-  console.log(request.body);
   try {
     let cartDelete = await deleteCart(request.body.user_id);
     response
@@ -97,7 +95,7 @@ const pushCart = async function (user_id) {
   }
 
   let query = {
-    text: "insert into quatro_transaction(user_id, product_id, discount_product_id, product_quantity,payment_status) select user_id, product_id, discount_product_id, product_quantity, payment_status from quatro_cart where user_id = $1;",
+    text: "insert into quatro_transaction(user_id, product_id, discount_product_id, product_quantity,payment_status) select distinct user_id, product_id, discount_product_id, SUM(product_quantity), payment_status from quatro_cart where user_id = $1 group by product_id, discount_product_id, user_id, payment_status",
     values: [user_id],
   };
 
@@ -165,7 +163,7 @@ const createCartDiscountAPI = async (request, response) => {
   }
 };
 
-const deleteDiscountCart = async function (discount_product_id, user_id) {
+const deleteDiscountCart = async function (user_id) {
   let query_1 = {
     text: "select user_id from quatro_cart where user_id=$1",
     values: [user_id],
@@ -179,8 +177,8 @@ const deleteDiscountCart = async function (discount_product_id, user_id) {
   }
 
   let query = {
-    text: "delete from quatro_cart where discount_product_id = $1 and user_id = $2",
-    values: [discount_product_id, user_id],
+    text: "delete from quatro_cart where user_id = $1",
+    values: [user_id],
   };
 
   let resultQuery = await pool.query(query);
@@ -190,12 +188,9 @@ const deleteDiscountCart = async function (discount_product_id, user_id) {
 };
 
 const deleteCartDiscountAPI = async (request, response) => {
-  const { discount_product_id, user_id } = request.body;
+  const { user_id } = request.body;
   try {
-    let cartDeleteDiscount = await deleteDiscountCart(
-      discount_product_id,
-      user_id
-    );
+    let cartDeleteDiscount = await deleteDiscountCart(user_id);
     response.status(200).json({
       result: cartDeleteDiscount,
       message: "Successfully delete from cart",

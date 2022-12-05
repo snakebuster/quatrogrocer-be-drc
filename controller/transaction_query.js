@@ -22,7 +22,7 @@ const getTransaction = async function (user_id) {
   }
 
   let query = {
-    text: "select * from quatro_transaction where user_id=$1 and payment_status=true",
+    text: "select distinct * from quatro_transaction where user_id=$1 and payment_status=true",
     values: [user_id],
   };
 
@@ -61,7 +61,7 @@ const getCheckoutCart = async function (user_id) {
   }
 
   let query = {
-    text: "select * from quatro_transaction where user_id=$1 and payment_status=false",
+    text: "select distinct * from quatro_transaction where user_id=$1 and payment_status=false",
     values: [user_id],
   };
 
