@@ -22,7 +22,7 @@ const getTransaction = async function (user_id) {
   }
 
   let query = {
-    text: "select distinct * from quatro_transaction where user_id=$1 and payment_status=true",
+    text: "select distinct * from quatro_transaction where user_id=$1 and payment_status=true order by transaction_timestamp desc",
     values: [user_id],
   };
 
@@ -226,7 +226,7 @@ const updatePaymentStatus = async function (user_id) {
   }
 
   let query = {
-    text: `update quatro_transaction set payment_status = true, transaction_timestamp = $1 where user_id = $2 and transaction_timestamp = null`,
+    text: `update quatro_transaction set payment_status = true, transaction_timestamp = $1 where user_id = $2 and transaction_timestamp is null`,
     values: [transaction_timestamp, user_id],
   };
 
