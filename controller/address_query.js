@@ -103,9 +103,7 @@ const createAddress = async function (
     validator.isEmpty(postcode) ||
     validator.isEmpty(state)
   ) {
-    throw Error(
-      "At least require input for address line 1 , address line 2,  postcode and state"
-    );
+    throw Error("All inputs are required");
   }
 
   if (address_line_1 || address_line_2 || address_line_3) {
@@ -222,9 +220,7 @@ const updateAddressDetails = async function (
     validator.isEmpty(postcode) ||
     validator.isEmpty(state)
   ) {
-    throw Error(
-      "At least require input for address line 1 , address line 2,  postcode and state"
-    );
+    throw Error("All inputs are required");
   }
 
   if (address_line_1 || address_line_2 || address_line_3) {
