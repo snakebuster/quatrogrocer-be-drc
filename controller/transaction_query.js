@@ -211,7 +211,7 @@ const updateTransactionAPI = async (request, response) => {
   }
 };
 
-const updatePaymentStatus = async function (user_id) {
+const updatePaymentStatus = async function (user_id, transaction_timestamp) {
   let transaction_timestamp = new Date();
   let query_1 = {
     text: "select user_id from quatro_transaction where user_id=$1",
@@ -226,7 +226,7 @@ const updatePaymentStatus = async function (user_id) {
   }
 
   let query = {
-    text: `update quatro_transaction set payment_status = true, transaction_timestamp = $1 where user_id = $2 and transaction_timestamp = null`,
+    text: `update quatro_transaction set payment_status = true, transaction_timestamp = $1 where user_id = $2 and transaction_timestamp is null`,
     values: [transaction_timestamp, user_id],
   };
 
