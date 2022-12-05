@@ -227,7 +227,7 @@ const updatePaymentStatus = async function (user_id) {
 
   let query = {
     text: `update quatro_transaction set payment_status = true, transaction_timestamp = $1 where user_id = $2 and transaction_timestamp = null`,
-    values: [user_id, transaction_timestamp],
+    values: [transaction_timestamp, user_id],
   };
 
   let resultQuery = await pool.query(query);
