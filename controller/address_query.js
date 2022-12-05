@@ -119,7 +119,7 @@ const createAddress = async function (
     state = state.toUpperCase();
     if (!validator.isInt(postcode)) {
       throw Error("Postcode only allow numbers");
-    } else if (postcode.length < 5 || postcode.length > 5) {
+    } else if (!postcode.length == 5) {
       throw Error("Postcode format in Malaysia is 5 digits");
     }
 
