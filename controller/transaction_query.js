@@ -143,8 +143,6 @@ const createTransactionAPI = async (request, response) => {
 };
 
 const updateTransaction = async function (user_id) {
-  let transaction_timestamp = new Date();
-
   let query_1 = {
     text: "select user_id from quatro_user where user_id=$1",
     values: [user_id],
@@ -189,9 +187,8 @@ const updateTransaction = async function (user_id) {
               (select quatro_product_discount.discount_product_image 
               from quatro_product_discount 
               where quatro_transaction.discount_product_id = quatro_product_discount.discount_product_id)
-              , 
-              transaction_timestamp = $1 where user_id = $2 ;`,
-    values: [transaction_timestamp, user_id],
+              where user_id = $1 ;`,
+    values: [user_id],
   };
 
   let resultQuery = await pool.query(query);
@@ -215,6 +212,7 @@ const updateTransactionAPI = async (request, response) => {
 };
 
 const updatePaymentStatus = async function (user_id) {
+  let transaction_timestamp = new Date();
   let query_1 = {
     text: "select user_id from quatro_transaction where user_id=$1",
     values: [user_id],
@@ -228,8 +226,8 @@ const updatePaymentStatus = async function (user_id) {
   }
 
   let query = {
-    text: `update quatro_transaction set payment_status = true where user_id = $1`,
-    values: [user_id],
+    text: `update quatro_transaction set payment_status = true, transaction_timestamp = $1 where user_id = $2 and transaction_timestamp = null`,
+    values: [user_id, transaction_timestamp],
   };
 
   let resultQuery = await pool.query(query);
