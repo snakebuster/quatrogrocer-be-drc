@@ -69,9 +69,11 @@ const createAddress = async function (
   };
   let resultExistQuery = await pool.query(existQuery);
   let existAddress = resultExistQuery.rows;
+  var regAddress = /^[A-Za-z0-9'\.\-\s\,]/;
 
   const states = [
     "WP Kuala Lumpur",
+    "Wilayah Persekutuan Kuala Lumpur",
     "Kuala Lumpur",
     "Johor",
     "Kedah",
@@ -87,8 +89,10 @@ const createAddress = async function (
     "Selangor",
     "Terengganu",
     "WP Labuan",
+    "Wilayah Persekutuan Labuan",
     "Labuan",
     "WP Putrajaya",
+    "Wilayah Persekutuan Putrajaya",
     "Putrajaya",
   ];
   const upperStates = states.map((e) => {
@@ -106,6 +110,15 @@ const createAddress = async function (
   }
 
   if (address_line_1 || address_line_2 || address_line_3) {
+    if (!regAddress.test(address_line_1)) {
+      throw Error("*There is invalid input in Address line 1 ");
+    }
+    if (!regAddress.test(address_line_2)) {
+      throw Error("*There is invalid input in Address line 2");
+    }
+    if (!regAddress.test(address_line_3)) {
+      throw Error("*There is invalid input in Address line 3");
+    }
     if (
       validator.isLength(address_line_1, address_line_2, address_line_3, {
         max: 50,
@@ -184,7 +197,7 @@ const updateAddressDetails = async function (
   address_id
 ) {
   //validation
-
+  var regAddress = /^[A-Za-z0-9'\.\-\s\,]/;
   const states = [
     "WP Kuala Lumpur",
     "Kuala Lumpur",
@@ -220,6 +233,13 @@ const updateAddressDetails = async function (
   }
 
   if (address_line_1 || address_line_2 || address_line_3) {
+    if (!regAddress.test(address_line_1)) {
+      throw Error("*There is invalid input in Address line 1 ");
+    } else if (!regAddress.test(address_line_2)) {
+      throw Error("*There is invalid input in Address line 2");
+    } else if (!regAddress.test(address_line_3)) {
+      throw Error("*There is invalid input in Address line 3");
+    }
     if (
       validator.isLength(address_line_1, address_line_2, address_line_3, {
         max: 50,
