@@ -11,7 +11,14 @@ Content-Type: application/json
       "product_price": "6.2",
       "transaction_timestamp": "2022-11-22 13:36:20" 
 }
+###
+POST http://localhost:5000/quatro_transaction/delete_cart
+Content-Type: application/json
 
+{
+      "user_id": 2,
+      "product_id": 2
+}
 
 ###
 POST http://localhost:5004/quatro_transaction/update
