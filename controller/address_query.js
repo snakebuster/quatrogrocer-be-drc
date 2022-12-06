@@ -72,6 +72,7 @@ const createAddress = async function (
 
   const states = [
     "WP Kuala Lumpur",
+    "Wilayah Persekutuan Kuala Lumpur",
     "Kuala Lumpur",
     "Johor",
     "Kedah",
@@ -87,8 +88,10 @@ const createAddress = async function (
     "Selangor",
     "Terengganu",
     "WP Labuan",
+    "Wilayah Persekutuan Labuan",
     "Labuan",
     "WP Putrajaya",
+    "Wilayah Persekutuan Putrajaya",
     "Putrajaya",
   ];
   const upperStates = states.map((e) => {
