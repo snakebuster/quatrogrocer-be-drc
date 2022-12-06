@@ -69,7 +69,7 @@ const createAddress = async function (
   };
   let resultExistQuery = await pool.query(existQuery);
   let existAddress = resultExistQuery.rows;
-  var regAddress = /^[A-Za-z0-9-,.\s]$/;
+  var regAddress = /^[A-Za-z0-9'\.\-\s\,]/;
 
   const states = [
     "WP Kuala Lumpur",
@@ -112,9 +112,11 @@ const createAddress = async function (
   if (address_line_1 || address_line_2 || address_line_3) {
     if (!regAddress.test(address_line_1)) {
       throw Error("*There is invalid input in Address line 1 ");
-    } else if (!regAddress.test(address_line_2)) {
+    }
+    if (!regAddress.test(address_line_2)) {
       throw Error("*There is invalid input in Address line 2");
-    } else if (!regAddress.test(address_line_3)) {
+    }
+    if (!regAddress.test(address_line_3)) {
       throw Error("*There is invalid input in Address line 3");
     }
     if (
@@ -195,7 +197,7 @@ const updateAddressDetails = async function (
   address_id
 ) {
   //validation
-  var regAddress = /^[A-Za-z0-9-,.\s]$/;
+  var regAddress = /^[A-Za-z0-9'\.\-\s\,]/;
   const states = [
     "WP Kuala Lumpur",
     "Kuala Lumpur",
