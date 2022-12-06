@@ -250,10 +250,48 @@ const updatePaymentAPI = async (request, response) => {
   }
 };
 
+const deleteTransactionCart = async function (user_id, product_id) {
+  let query_1 = {
+    text: "select user_id from quatro_transaction where user_id=$1",
+    values: [user_id],
+  };
+
+  let resultQuery_1 = await pool.query(query_1);
+  let userCheckout = resultQuery_1.rows;
+
+  if (userCheckout.length === 0) {
+    throw Error("User doesn't exist");
+  }
+
+  let query = {
+    text: "delete from quatro_transaction where user_id=$1 and product_id=$2 and payment_status = false",
+    values: [user_id, product_id],
+  };
+
+  let resultQuery = await pool.query(query);
+  let deletedCart = resultQuery.rows;
+  return deletedCart;
+};
+
+const deleteTransactionCartAPI = async (request, response) => {
+  const { user_id, product_id } = request.body;
+  try {
+    let paymentUpdate = await deleteTransactionCart(user_id, product_id);
+    response.status(200).json({
+      result: paymentUpdate,
+      message: "Item deleted successfully",
+    });
+  } catch (error) {
+    console.log("error:", error);
+    response.status(404).json({ error: error.message });
+  }
+};
+
 module.exports = {
   getTransactionAPI,
   getCheckoutCartAPI,
   createTransactionAPI,
   updateTransactionAPI,
   updatePaymentAPI,
+  deleteTransactionCartAPI,
 };
