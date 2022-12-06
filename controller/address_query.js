@@ -102,9 +102,7 @@ const createAddress = async function (
     validator.isEmpty(postcode) ||
     validator.isEmpty(state)
   ) {
-    throw Error(
-      "At least require input for address line 1 , address line 2,  postcode and state"
-    );
+    throw Error("All inputs are required");
   }
 
   if (address_line_1 || address_line_2 || address_line_3) {
@@ -121,7 +119,7 @@ const createAddress = async function (
     state = state.toUpperCase();
     if (!validator.isInt(postcode)) {
       throw Error("Postcode only allow numbers");
-    } else if (postcode.length < 5 || postcode.length > 5) {
+    } else if (!postcode.length == 5) {
       throw Error("Postcode format in Malaysia is 5 digits");
     }
 
@@ -218,9 +216,7 @@ const updateAddressDetails = async function (
     validator.isEmpty(postcode) ||
     validator.isEmpty(state)
   ) {
-    throw Error(
-      "At least require input for address line 1 , address line 2,  postcode and state"
-    );
+    throw Error("All inputs are required");
   }
 
   if (address_line_1 || address_line_2 || address_line_3) {
@@ -262,9 +258,7 @@ const updateAddressDetails = async function (
     text: `update quatro_address set address_line_1 = coalesce(nullif($1,''), address_line_1),
            address_line_2 = coalesce(nullif($2,''), address_line_2),
            address_line_3 = coalesce(nullif($3,''), address_line_3),
-
            postcode = coalesce(nullif($4,''), postcode),
-
            state = coalesce(nullif($5,''), state)
            where address_id = $6;`,
     values: [

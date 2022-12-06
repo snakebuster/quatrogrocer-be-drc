@@ -55,7 +55,7 @@ const loginUser = async function (email, password) {
   //validation
 
   if (user.length === 0) {
-    throw Error("Email doesnt exist");
+    throw Error("Email does not exist");
   }
 
   //------------------------
@@ -99,19 +99,19 @@ const createUser = async function (
 
   let resultQuery_1 = await pool.query(query_1);
   let user = resultQuery_1.rows;
-  var regName = /^[A-Za-z'\s]*$/;
-  // var regName= /^([a-z]+[,.]?[ ]?|[a-z]+['-]?)+$/;
 
   if (user.length !== 0) {
     throw Error("Email exist");
   }
 
-  if (
-    !first_name.trim() ||
-    !regName.test(first_name) ||
-    !last_name.trim() ||
-    !regName.test(last_name)
-  ) {
+  if (validator.isEmpty(first_name)) {
+    throw Error("First name input is required");
+  }
+  if (validator.isEmpty(last_name)) {
+    throw Error("Last name input is required");
+  }
+
+  if (!validator.isAlpha(first_name) || !validator.isAlpha(last_name)) {
     throw Error("Name should contain alphabets only");
   }
 
@@ -216,8 +216,6 @@ const updateUser = async function (
   if (!validPassword) {
     throw Error("Incorrect Password");
   }
-
-
 
   let query = {
     text: `update quatro_user set first_name = coalesce(nullif($1,''), first_name),
